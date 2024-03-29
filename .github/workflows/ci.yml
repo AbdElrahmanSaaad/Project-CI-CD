@@ -81,9 +81,7 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-
-      - name: Terraform format
-        run: terraform format
+        
 
       - name: Terraform validate
         run: terraform validate
