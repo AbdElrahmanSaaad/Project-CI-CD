@@ -47,7 +47,7 @@ jobs:
       - name: Build
         run: |
           npm run build
-          cp package.json dist/
+          cp package.json dest/
       - name: Upload Artifacts
         uses: actions/upload-artifact@main
         with:
@@ -121,7 +121,7 @@ jobs:
           script: |
               sudo yum install nodejs -y
               sudo npm install -g pm2
-              cd App/dist
+              cd App/dest
               sudo npm install 
               sudo pm2 start "PORT=80 node main.js"
                 
