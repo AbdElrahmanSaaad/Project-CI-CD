@@ -42,7 +42,7 @@ resource "aws_instance" "my-ec2"{
     
 }
 resource "aws_eip" "my_eip" {
-  vpc = true  
+  vpc =   true  
 }
 resource "aws_eip_association" "my_eip_assoc" {
   instance_id   = aws_instance.my-ec2.id
