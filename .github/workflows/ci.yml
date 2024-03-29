@@ -81,7 +81,7 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
-        
+
 
       - name: Terraform validate
         run: terraform validate
@@ -109,7 +109,7 @@ jobs:
           username: ec2-user
           key: ${{secrets.SSH_PRIVATE_KEY}}
           port: 22
-          source: dist/
+          source: dest/
           target: App
       - name: multiple command
         uses: appleboy/ssh-action@v1.0.3
