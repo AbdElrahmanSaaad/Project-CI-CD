@@ -1,2 +1,2 @@
 instance_type ="t2.micro"
-image="ami-0c02fb55956c7d316"
+image="ami-0843a4d6dc2130849"
