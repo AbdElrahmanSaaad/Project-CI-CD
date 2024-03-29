@@ -77,7 +77,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v2
         with:
           
-          aws-region: "eu-west-1"
+          aws-region: "us-east-1"
 
       - name: Terraform Init
         run: terraform init
