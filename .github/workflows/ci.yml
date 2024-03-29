@@ -2,11 +2,7 @@ name: CI&CD
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'Environment to deploy to Development or Production'
-        required: true
-        default: '' # Default value, change as needed
+  
    
 
 jobs:
