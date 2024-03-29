@@ -1,4 +1,4 @@
-<h1 align="center">Node.js Starter ToolKit</h1>
+<h1 align="center">Node.js Starter ToolKit</h1>  
 
 <p align="center">
     <i>Starter Project for a Node.js application using <strong>TypeScript</strong> with all boring stuff already configured.</i>
