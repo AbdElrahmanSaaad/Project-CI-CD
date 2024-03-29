@@ -10,7 +10,6 @@ resource "aws_instance" "my-ec2"{
     ami= var.image
     instance_type= var.instance_type
     key_name      = "Abdokey"
-    security_groups = [aws_security_group.ssh_access.name]
      
     
 }
