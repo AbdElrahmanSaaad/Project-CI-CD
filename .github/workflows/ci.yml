@@ -1,0 +1,131 @@
+name: CI&CD
+
+on:
+  
+  push:
+    branches:
+      - main
+   
+
+jobs:
+  test-build:
+    name: test-build
+    runs-on: ubuntu-latest 
+
+  
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use NodeJS
+        id: setup-node
+        uses: actions/setup-node@v4.0.1
+        with:
+          node-version: 16.x
+          cache: 'npm'
+      
+       
+    
+
+      - name: Deps
+        run: |
+          npm ci
+      - name: format
+        run: |
+          npm run format
+        
+
+      - name: Lint
+        run: |
+          npm run lint
+          npm run format:check
+
+      - name: Test
+        run: |
+          npm run test:ci
+      
+      - name: Build
+        run: |
+          npm run build
+          cp package.json dist/
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@main
+        with:
+          name: result
+          path: dest/
+  terraform_deploy:
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+
+    runs-on: ubuntu-latest
+    needs: test-build
+    name: Provision EC2 with Terraform
+    outputs:
+      output1: ${{ steps.ip_address.outputs.ip }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
+        
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          
+          aws-region: "eu-west-1"
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform format
+        run: terraform format
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan
+
+
+      - name: Terraform Apply
+        run: terraform apply --auto-approve
+      
+      - id: ip_address
+        run: | 
+            terraform-bin output instance_ip |tr "\"" "\0" >ip
+            echo ip=$(cat ip) 
+      - name: download Artifacts
+        uses: actions/download-artifact@main
+        with:
+          name: result
+          path: dest/
+      - name: deploy copy to ec2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ steps.ip_address.outputs.ip }}
+          username: ec2-user
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          port: 22
+          source: dist/
+          target: App
+      - name: multiple command
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ steps.ip_address.outputs.ip }}
+          username: ec2-user
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+              sudo yum install nodejs -y
+              sudo npm install -g pm2
+              cd App/dist
+              sudo npm install 
+              sudo pm2 start "PORT=80 node main.js"
+                
+
+       
