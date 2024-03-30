@@ -35,9 +35,6 @@ This repository contains a GitHub Actions workflow for continuous integration an
 - Monitor the workflow execution in the Actions tab of your GitHub repository.
 - Once the workflow is completed successfully, your Node.js application will be deployed to the provisioned EC2 instance.
 
-## Contributors
-
-- [Your Name](https://github.com/yourusername) - Role/Contribution
 
 ## License
 
